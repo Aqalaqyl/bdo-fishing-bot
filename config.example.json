@@ -1,0 +1,87 @@
+{
+  "screen_width": 1920,
+  "screen_height": 1080,
+  "ui_scale": 100,
+  "bite_region": {
+    "left": 710,
+    "top": 430,
+    "width": 500,
+    "height": 300
+  },
+  "gauge_region": {
+    "left": 560,
+    "top": 590,
+    "width": 800,
+    "height": 170
+  },
+  "wasd_region": {
+    "left": 560,
+    "top": 220,
+    "width": 800,
+    "height": 150
+  },
+  "input_backend": "auto",
+  "cast_key": "space",
+  "hook_key": "space",
+  "gauge_key": "space",
+  "loot_key": "r",
+  "press_loot_key_after_catch": false,
+  "cast_hold_s": 0.05,
+  "cast_settle_s": 3.0,
+  "bite_timeout_s": 150.0,
+  "bite_poll_s": 0.05,
+  "bite_confirm_frames": 2,
+  "hook_to_gauge_timeout_s": 4.0,
+  "gauge_poll_s": 0.004,
+  "gauge_timeout_s": 8.0,
+  "gauge_to_wasd_timeout_s": 4.0,
+  "wasd_stable_frames": 2,
+  "wasd_key_delay_s": 0.09,
+  "wasd_timeout_s": 5.0,
+  "post_catch_delay_s": 4.5,
+  "key_hold_s": 0.05,
+  "jitter_s": 0.12,
+  "loop_delay_s": 1.0,
+  "templates_dir": "templates",
+  "template_threshold": 0.8,
+  "bite_detection": "auto",
+  "bite_bright_value": 225,
+  "bite_bright_min_pixels": 350,
+  "bite_change_threshold": 14.0,
+  "gauge_zone_hsv_lower": [
+    92,
+    110,
+    110
+  ],
+  "gauge_zone_hsv_upper": [
+    128,
+    255,
+    255
+  ],
+  "gauge_marker_hsv_lower": [
+    0,
+    0,
+    205
+  ],
+  "gauge_marker_hsv_upper": [
+    180,
+    70,
+    255
+  ],
+  "gauge_min_zone_width": 20,
+  "gauge_min_column_pixels": 6,
+  "gauge_zone_margin_px": 4,
+  "gauge_lead_frames": 1.5,
+  "wasd_reversed_map": {
+    "w_rev": "s",
+    "s_rev": "w",
+    "a_rev": "d",
+    "d_rev": "a"
+  },
+  "pause_hotkey": "f9",
+  "stop_hotkey": "f10",
+  "max_consecutive_failures": 6,
+  "max_casts": 0,
+  "debug_dir": null,
+  "dry_run": false
+}
