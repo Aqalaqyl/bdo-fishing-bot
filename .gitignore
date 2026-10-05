@@ -7,3 +7,6 @@ captures/
 debug/
 preview.png
 config.json
+*.egg-info/
+build/
+dist/

@@ -7,7 +7,8 @@ and recasts the line, forever.
 
 Defaults are tuned for **1920x1080 at 100% UI scale**. The bot never reads
 game memory or injects anything: it takes screenshots with `mss`, analyses
-them with OpenCV and sends DirectInput key presses with `pydirectinput`.
+them with OpenCV and sends key presses through DirectInput (`pydirectinput`,
+Windows) or a virtual keyboard (`uinput`, Linux/Proton).
 
 > Written for educational use on a private server. Using automation on the
 > official servers violates the Terms of Service and will get an account banned.
@@ -31,18 +32,62 @@ A cast that gets no bite within `bite_timeout_s` is recast. Six such casts
 in a row (`max_consecutive_failures`) stop the bot, which catches a broken
 rod, a full inventory or a mis-calibrated region.
 
-## Installation (Windows)
+## Installation
+
+Python 3.10+ is required on every platform.
+
+### Linux (one command)
+
+```bash
+git clone https://github.com/Aqalaqyl/bdo-fishing-bot
+cd bdo-fishing-bot
+./install.sh --uinput     # drop --uinput if you don't want to use sudo
+```
+
+`install.sh` installs the system packages (apt, dnf, pacman or zypper),
+creates `.venv`, installs the bot into it and checks every import. Afterwards
+use `./run.sh` instead of `python -m ...`:
+
+```bash
+./run.sh calibrate preview      # calibration tools
+./run.sh --dry-run -v           # the bot
+```
+
+`--uinput` adds a udev rule and puts your user in the `input` group so the
+bot can create a virtual keyboard through `/dev/uinput`. BDO under
+Proton/Wine treats that like real hardware, whereas XTEST key events from
+`pyautogui` are sometimes ignored by the game. **Log out and back in once**
+after running it. Without it the bot falls back to `pyautogui` automatically.
+
+Linux notes:
+
+* You need an **X11/Xorg session**. On Wayland `mss` cannot capture the
+  screen and `pynput` hotkeys do not work (the installer warns about this).
+* Run the game at 1920x1080 in a borderless/windowed Proton window on the
+  primary monitor; screen coordinates in the config are for that monitor.
+* `input_backend` in `config.json` forces a backend (`uinput`, `pyautogui`);
+  the default `auto` tries `uinput` first.
+
+### Windows
 
 ```powershell
 git clone https://github.com/Aqalaqyl/bdo-fishing-bot
 cd bdo-fishing-bot
 py -3 -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -e .
+bdo-fishing-bot --help
 ```
 
-Python 3.10+ is required. If BDO is started "as administrator" the bot must
-be too, otherwise Windows blocks the synthetic key presses.
+If BDO is started "as administrator" the bot must be too, otherwise Windows
+blocks the synthetic key presses.
+
+### Any platform via pip
+
+`pip install .` (or `pip install -e .` for a checkout you intend to edit)
+installs two commands, `bdo-fishing-bot` and `bdo-fishing-calibrate`, which
+are identical to `python -m bdo_fishing_bot` and
+`python -m bdo_fishing_bot.tools.calibrate`.
 
 ### Game settings
 
@@ -144,6 +189,7 @@ Unknown keys are rejected so typos are caught at start-up.
 | Key | Default | Meaning |
 |-----|---------|---------|
 | `bite_region`, `gauge_region`, `wasd_region` | see example | Screen rectangles (`left, top, width, height`) |
+| `input_backend` | `auto` | `auto`, `pydirectinput`, `uinput` or `pyautogui` |
 | `cast_key`, `hook_key`, `gauge_key` | `space` | Keys sent for each action |
 | `press_loot_key_after_catch`, `loot_key` | `false`, `r` | Press loot key after each catch |
 | `cast_hold_s` | 0.05 | How long to hold the cast key. Raise it (e.g. `2.0`) to fill the power gauge and spend energy on each cast; also available as `--cast-hold 2.0` |
@@ -169,9 +215,13 @@ Unknown keys are rejected so typos are caught at start-up.
 
 ## Troubleshooting
 
-* **Keys do nothing in game** – make sure `pydirectinput` is installed (the
-  log prints `Keyboard backend: pydirectinput`) and that the bot runs with the
-  same privilege level as the game.
+* **Keys do nothing in game (Windows)** – make sure `pydirectinput` is
+  installed (the log prints `Keyboard backend: pydirectinput`) and that the
+  bot runs with the same privilege level as the game.
+* **Keys do nothing in game (Linux)** – the log should say
+  `Keyboard backend: uinput`. If it says `pyautogui`, run
+  `./install.sh --uinput`, log out and in, and check `ls -l /dev/uinput` is
+  group `input` and writable.
 * **Bite never detected** – run `--dry-run -v`; the log prints the live score.
   In `bright` mode lower `bite_bright_min_pixels`, or capture `bite.png`.
   Check the yellow rectangle in `preview.png` actually contains the prompt.
@@ -206,10 +256,12 @@ bdo_fishing_bot/
   detectors.py      BiteDetector, analyze_gauge/GaugeTracker, WasdReader
   vision.py         template matching, NMS, HSV masks
   screen.py         mss capture
-  controls.py       pydirectinput / pyautogui key presses, dry-run mode
+  controls.py       pydirectinput / uinput / pyautogui key presses, dry-run mode
   hotkeys.py        global pause/stop hotkeys (pynput)
   config.py         dataclass config + JSON overrides
   tools/calibrate.py  preview / burst / split-keys / analyze / hsv
 templates/          your captured UI crops (see templates/README.md)
 tests/              synthetic-image unit tests
+install.sh, run.sh  Linux installer and launcher
+pyproject.toml      pip-installable package (bdo-fishing-bot / bdo-fishing-calibrate)
 ```

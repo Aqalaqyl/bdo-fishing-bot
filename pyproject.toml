@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bdo-fishing-bot"
+version = "0.1.0"
+description = "Screen-reading fishing bot for Black Desert Online (1920x1080, UI scale 100)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "opencv-python>=4.8; sys_platform == 'win32'",
+    "opencv-python-headless>=4.8; sys_platform != 'win32'",
+    "mss>=9.0",
+    "pynput>=1.7.6",
+    "pyautogui>=0.9.54",
+    "pydirectinput>=1.0.4; sys_platform == 'win32'",
+    "evdev>=1.6; sys_platform == 'linux'",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pyflakes"]
+
+[project.scripts]
+bdo-fishing-bot = "bdo_fishing_bot.__main__:main"
+bdo-fishing-calibrate = "bdo_fishing_bot.tools.calibrate:main"
+
+[tool.setuptools.packages.find]
+include = ["bdo_fishing_bot*"]

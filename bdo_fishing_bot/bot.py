@@ -51,7 +51,9 @@ class FishingBot:
     ) -> None:
         self.cfg = cfg
         self.screen = screen or Screen()
-        self.keyboard = keyboard or Keyboard(cfg.key_hold_s, cfg.jitter_s, cfg.dry_run)
+        self.keyboard = keyboard or Keyboard(
+            cfg.key_hold_s, cfg.jitter_s, cfg.dry_run, cfg.input_backend
+        )
         templates = vision.load_templates(
             cfg.templates_dir, vision.WASD_TEMPLATE_NAMES + (vision.BITE_TEMPLATE_NAME,)
         )
@@ -94,6 +96,9 @@ class FishingBot:
             log.info("Interrupted")
         finally:
             self.hotkeys.stop()
+            close = getattr(self.keyboard, "close", None)
+            if close:
+                close()
             log.info("Final stats: %s", self.stats.summary())
 
     def cycle(self) -> bool:

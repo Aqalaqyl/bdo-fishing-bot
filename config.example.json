@@ -20,6 +20,7 @@
     "width": 800,
     "height": 150
   },
+  "input_backend": "auto",
   "cast_key": "space",
   "hook_key": "space",
   "gauge_key": "space",

@@ -56,6 +56,8 @@ class Config:
     wasd_region: Region = field(default_factory=lambda: Region(560, 220, 800, 150))
 
     # --- Keys ---------------------------------------------------------------
+    # auto = pydirectinput on Windows, uinput then pyautogui on Linux.
+    input_backend: str = "auto"  # auto | pydirectinput | uinput | pyautogui
     cast_key: str = "space"
     hook_key: str = "space"
     gauge_key: str = "space"
