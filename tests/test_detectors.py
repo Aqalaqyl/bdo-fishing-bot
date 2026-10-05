@@ -71,6 +71,39 @@ def test_default_regions_fit_1080p():
         assert 0 <= region.top and region.bottom <= 1080
 
 
+class RecordingKeyboard:
+    def __init__(self):
+        self.presses = []
+
+    def press(self, key, hold_s=None):
+        self.presses.append((key, hold_s))
+
+    def press_sequence(self, keys, delay_s):
+        self.presses.extend((k, None) for k in keys)
+
+    def sleep(self, seconds, jitter=True):
+        pass
+
+
+class NullScreen:
+    def grab(self, region):
+        return np.zeros((region.height, region.width, 3), dtype=np.uint8)
+
+
+def test_cast_holds_key_for_configured_duration(tmp_path):
+    from bdo_fishing_bot.bot import FishingBot
+
+    cfg = Config()
+    cfg.templates_dir = str(tmp_path)
+    cfg.cast_hold_s = 2.0
+    cfg.cast_settle_s = 0
+    keyboard = RecordingKeyboard()
+    bot = FishingBot(cfg, screen=NullScreen(), keyboard=keyboard)
+    bot.cast()
+    assert keyboard.presses == [("space", 2.0)]
+    assert bot.stats.casts == 1
+
+
 # ------------------------------------------------------------------- gauge
 def test_gauge_detects_zone_and_marker():
     cfg = Config()

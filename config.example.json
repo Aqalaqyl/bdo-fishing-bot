@@ -25,6 +25,7 @@
   "gauge_key": "space",
   "loot_key": "r",
   "press_loot_key_after_catch": false,
+  "cast_hold_s": 0.05,
   "cast_settle_s": 3.0,
   "bite_timeout_s": 150.0,
   "bite_poll_s": 0.05,

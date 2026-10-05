@@ -19,6 +19,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--debug-dir", help="save a screenshot of every detection stage here")
     parser.add_argument("--bite-mode", choices=["auto", "template", "bright", "change"])
     parser.add_argument("--max-casts", type=int)
+    parser.add_argument(
+        "--cast-hold",
+        type=float,
+        metavar="SECONDS",
+        help="hold the cast key this long to spend energy on the cast (default: tap)",
+    )
     parser.add_argument("--start-delay", type=float, default=3.0, help="seconds before the first cast")
     parser.add_argument("-v", "--verbose", action="store_true")
     parser.add_argument("--print-config", action="store_true", help="dump the effective config and exit")
@@ -41,6 +47,8 @@ def main(argv=None) -> int:
         cfg.bite_detection = args.bite_mode
     if args.max_casts is not None:
         cfg.max_casts = args.max_casts
+    if args.cast_hold is not None:
+        cfg.cast_hold_s = args.cast_hold
     if args.print_config:
         import json
 

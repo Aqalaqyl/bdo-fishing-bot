@@ -112,8 +112,12 @@ class FishingBot:
     # ---------------------------------------------------------------- stages
     def cast(self) -> None:
         self.stats.casts += 1
-        log.info("Cast #%d", self.stats.casts)
-        self.keyboard.press(self.cfg.cast_key)
+        if self.cfg.cast_hold_s > self.cfg.key_hold_s:
+            log.info("Cast #%d (holding %s for %.2f s to spend energy)",
+                     self.stats.casts, self.cfg.cast_key, self.cfg.cast_hold_s)
+        else:
+            log.info("Cast #%d", self.stats.casts)
+        self.keyboard.press(self.cfg.cast_key, hold_s=self.cfg.cast_hold_s)
         self.keyboard.sleep(self.cfg.cast_settle_s)
         baseline = self.screen.grab(self.cfg.bite_region) if self.bite.mode == "change" else None
         self.bite.reset(baseline)

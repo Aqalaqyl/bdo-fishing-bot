@@ -63,6 +63,9 @@ class Config:
     press_loot_key_after_catch: bool = False
 
     # --- Timings (seconds) ---------------------------------------------------
+    # How long to hold the cast key. A tap (0.05) is a normal cast; holding it
+    # (e.g. 1.5-2.5 s) fills the power gauge and spends energy on the cast.
+    cast_hold_s: float = 0.05
     cast_settle_s: float = 3.0  # ignore the bite region right after casting
     bite_timeout_s: float = 150.0  # recast if nothing bites in this long
     bite_poll_s: float = 0.05

@@ -122,7 +122,13 @@ the key icons before running unattended.
 python -m bdo_fishing_bot                  # uses config.json if present
 python -m bdo_fishing_bot -c myconfig.json --max-casts 200
 python -m bdo_fishing_bot --bite-mode change --debug-dir debug
+python -m bdo_fishing_bot --cast-hold 2.0        # hold Space 2 s per cast to spend energy
 ```
+
+A plain tap of Space is a normal cast. Holding it keeps the cast power gauge
+filling and consumes energy for the cast; set `cast_hold_s` (or `--cast-hold`)
+to how long you would hold the key yourself. The bot does not track your
+energy, so once it runs out the game simply performs a normal cast.
 
 After a 3 second countdown the first cast is sent. Stats (casts, bites,
 timeouts, minigames solved, catches) are logged after every cycle.
@@ -140,6 +146,7 @@ Unknown keys are rejected so typos are caught at start-up.
 | `bite_region`, `gauge_region`, `wasd_region` | see example | Screen rectangles (`left, top, width, height`) |
 | `cast_key`, `hook_key`, `gauge_key` | `space` | Keys sent for each action |
 | `press_loot_key_after_catch`, `loot_key` | `false`, `r` | Press loot key after each catch |
+| `cast_hold_s` | 0.05 | How long to hold the cast key. Raise it (e.g. `2.0`) to fill the power gauge and spend energy on each cast; also available as `--cast-hold 2.0` |
 | `cast_settle_s` | 3.0 | Ignore the bite region for this long after casting |
 | `bite_timeout_s` | 150 | Recast if nothing bites |
 | `bite_detection` | `auto` | `auto`, `template`, `bright` or `change` |
